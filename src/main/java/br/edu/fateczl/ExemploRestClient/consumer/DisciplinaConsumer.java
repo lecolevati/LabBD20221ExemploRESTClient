@@ -21,15 +21,13 @@ public class DisciplinaConsumer implements IOperacoesConsumer<Disciplina> {
 	@Autowired
 	HTTPConn httpConn;
 	
-	private final String HTTP_URL = "http://localhost:8080/ExemploREST/rest/disciplina/";
+	private final String HTTP_URL = "http://localhost:8080/ExemploRESTv2/rest/disciplina/";
 		
 	@Override
 	public List<Disciplina> findAll() throws IOException {
-		String disciplinasListJson = httpConn.getOp(HTTP_URL, "");
-		String[] vetDisciplinaDTOJson = disciplinasListJson.split("List\":");
-		String disciplinasJson = vetDisciplinaDTOJson[1].replaceAll("\\{\"disciplina\":","");
-		disciplinasJson = disciplinasJson.replaceAll("\\}\\}","\\}");
-		disciplinasJson = disciplinasJson.substring(0, disciplinasJson.length() - 1);
+		String disciplinasJson = httpConn.getOp(HTTP_URL, "");
+		String[] vetDisciplinaJson = disciplinasJson.split("List\":");
+		disciplinasJson = vetDisciplinaJson[1].substring(0, vetDisciplinaJson[1].length() - 1);
 		Gson gson = new Gson();
 		Type disciplinasTipo = new TypeToken<ArrayList<Disciplina>>(){}.getType();
 		List<Disciplina> disciplinas = gson.fromJson(disciplinasJson, disciplinasTipo);  
@@ -38,10 +36,9 @@ public class DisciplinaConsumer implements IOperacoesConsumer<Disciplina> {
 
 	@Override
 	public Disciplina findOne(Disciplina disc) throws IOException {
-		String disciplinaDTOJson = httpConn.getOp(HTTP_URL, String.valueOf(disc.getCodigo()));
-//		{"DisciplinaDTO":{"disciplina":{"codigo":5,"nome":"Lab BD"}}}
-		String[] vetDisciplinaDTOJson = disciplinaDTOJson.split("disciplina\":");
-		String disciplinaJson = vetDisciplinaDTOJson[1].substring(0, vetDisciplinaDTOJson[1].length() - 2);
+		String disciplinaJson = httpConn.getOp(HTTP_URL, String.valueOf(disc.getCodigo()));
+		String[] vetDisciplinaDTOJson = disciplinaJson.split("DTO\":");
+		disciplinaJson = vetDisciplinaDTOJson[1].substring(0, vetDisciplinaDTOJson[1].length() - 1);
 		Gson gson = new Gson();
 		Disciplina disciplina = gson.fromJson(disciplinaJson, Disciplina.class);  
 		return disciplina;

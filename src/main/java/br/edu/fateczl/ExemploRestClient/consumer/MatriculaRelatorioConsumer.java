@@ -32,7 +32,7 @@ public class MatriculaRelatorioConsumer {
 	@Autowired
 	HTTPConn httpConn;
 	
-	private final String HTTP_URL = "http://localhost:8080/ExemploREST/rest/matricula/lista/";
+	private final String HTTP_URL = "http://localhost:8080/ExemploRESTv2/rest/matricula/lista/";
 		
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -53,7 +53,7 @@ public class MatriculaRelatorioConsumer {
 		
 		try {
 			InputStream jsonInputStream = httpConn.getJsonInputStream(HTTP_URL, String.valueOf(codigo));
-		    JsonDataSource ds = new JsonDataSource(jsonInputStream, "List.listaMatricula");   
+		    JsonDataSource ds = new JsonDataSource(jsonInputStream, "List");   
 			File arquivo = ResourceUtils.getFile("classpath:reports/ListaMatriculav2.jasper");
 			JasperReport report = 
 					(JasperReport) JRLoader.loadObjectFromFile(arquivo.getAbsolutePath());
